@@ -22,13 +22,20 @@ namespace TaskManager
         public int currentIndex;
         public NewTask newTask;
         public NewContainer newContainer;
+        private mediametrieEntities bdd;
+        private requete req;
 
         public MainWindow()
         {
             InitializeComponent();
             m_containers = new List<Container>();
 
-            ComboBoxItem cbBoxItem = new ComboBoxItem();
+            bdd = new mediametrieEntities();
+            req = new requete();
+
+            LoadDB();
+
+            /*ComboBoxItem cbBoxItem = new ComboBoxItem();
             cbBoxItem.Content = "Boite de réception";
             comboBox.Items.Add(cbBoxItem);
             ComboBoxItem cbBoxItem1 = new ComboBoxItem();
@@ -36,13 +43,13 @@ namespace TaskManager
             comboBox.Items.Add(cbBoxItem1);
             ComboBoxItem cbBoxItem2 = new ComboBoxItem();
             cbBoxItem2.Content = "Journée";
-            comboBox.Items.Add(cbBoxItem2);
+            comboBox.Items.Add(cbBoxItem2);*/
 
             comboBox.SelectedIndex = 0;
             currentIndex = 0;
-
+            /*
             Container container = new Container();
-            container.Name = cbBoxItem.Content.ToString();
+            container.Name = "Boite de réception";// cbBoxItem.Content.ToString();
             m_containers.Add(container);
             m_containers[0].addItem(null, "Task0", "01/01/2018", "01/02/2018", "testComment0.0");
             unselectItem();
@@ -54,20 +61,48 @@ namespace TaskManager
             m_containers[0].addItem(m_containers[0].m_Tasks[1], "SubTask1.0", "02/01/2016", "02/02/2016", "testComment1.0");
             m_containers[0].addItem(m_containers[0].m_Tasks[1], "SubTask1.1", "03/01/2016", "03/02/2016", "testComment1.1");
             m_containers[0].addItem(m_containers[0].m_Tasks[1], "SubTask1.2", "04/01/2016", "04/02/2016", "testComment1.2");
-
-            Container container1 = new Container();
+            */
+            /*Container container1 = new Container();
             container1.Name = cbBoxItem1.Content.ToString();
             m_containers.Add(container1);
             Container container2 = new Container();
             container2.Name = cbBoxItem2.Content.ToString();
-            m_containers.Add(container2);
+            m_containers.Add(container2);*/
 
             treeView.ItemsSource = m_containers[0].m_Tasks;
         }
 
         private void LoadDB()
         {
+            List<container> list_containers = new List<container>();
+            List<taches> list_tasks = new List<taches>();
+            List<taches> list_subtasks = new List<taches>();
+            int index_container = 0;
+            list_containers = req.getContainer(bdd);
+            foreach(container element in list_containers)
+            {
+                int nbTache = req.getNbTacheContainer(bdd, element.label);
+                comboBox.Items.Add(new ComboBoxItem() { Content = element.label });
+                m_containers.Add(new Container() { Name = element.label });
+                list_tasks = req.getTachesContainer(bdd, element.label);
+                foreach(taches task in list_tasks)
+                {
+                    int index_task = 0;
+                    m_containers[index_container].addItem(null, task.label_tache, task.date_debut.ToString(), task.date_fin.ToString(), task.commentaire);
+                    list_subtasks = req.getSousTaches(bdd, task.label_tache);
+                    foreach(taches subtask in list_subtasks)
+                    {
+                        m_containers[index_container].addItem(m_containers[index_container].m_Tasks[index_task], subtask.label_tache, subtask.date_debut.ToString(), subtask.date_fin.ToString(), subtask.commentaire);
+                    }
+                    ++index_task;
+                    MessageBox.Show("task: " + task.label_tache);
 
+                }
+                ++index_container;
+                //MessageBox.Show("index_container: " + index_container);
+
+            }
+            //MessageBox.Show(m_containers[1].m_Tasks[0].Name);
         }
 
         private void unselectItem()

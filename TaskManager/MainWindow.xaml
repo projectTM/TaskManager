@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="464" Width="869" MinHeight="300" MinWidth="500">
+        Title="MainWindow" Height="478.328" Width="869" MinHeight="300" MinWidth="500">
     <Grid Margin="0,0,2,-1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="259*"/>
             <ColumnDefinition Width="199*"/>
             <ColumnDefinition Width="384*"/>
         </Grid.ColumnDefinitions>
-        <TreeView TreeViewItem.Selected="OnSelectTreeViewItem" x:Name="treeView" Margin="3,60,10,10">
+        <TreeView TreeViewItem.Selected="OnSelectTreeViewItem" x:Name="treeView" Margin="3,60,10,35">
             <TreeView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Ajouter Tache" Click="addTask_click"></MenuItem>
@@ -34,8 +34,10 @@
         <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="17,10,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="2"/>
         <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,119,10" Width="75" Click="saveTask_Click" Grid.Column="2" Height="20" VerticalAlignment="Bottom"/>
         <Button x:Name="remTask" Content="Supprimer" Margin="0,0,39,10" Grid.Column="2" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click"/>
-        <ComboBox x:Name="comboBox" Margin="3,38,54,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True"/>
-        <Button x:Name="remContainer" Content="-" HorizontalAlignment="Left" Margin="232,38,0,0" VerticalAlignment="Top" Width="22" Height="22" RenderTransformOrigin="1.136,0.636"/>
-        <Button x:Name="addContainer" Content="+" HorizontalAlignment="Left" Margin="210,38,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="addContainer_Click"/>
+            <ComboBox x:Name="comboBox" Margin="3,38,54,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True"/>
+            <Button x:Name="addContainer" Content="+" HorizontalAlignment="Left" Margin="210,38,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="addContainer_Click"/>
+            <Button x:Name="remContainer" Content="-" HorizontalAlignment="Left" Margin="232,38,0,0" VerticalAlignment="Top" Width="22" Height="22" RenderTransformOrigin="1.136,0.636"/>
+        <TextBox x:Name="textBox" Margin="3,413,82,12" TextWrapping="Wrap" Text="TextBox"/>
+        <Button x:Name="button" Content="Button" Margin="182,413,10,12"/>
     </Grid>
 </Window>
