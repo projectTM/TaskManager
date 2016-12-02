@@ -1,0 +1,41 @@
+﻿<Window x:Class="TaskManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskManager"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="464" Width="869" MinHeight="300" MinWidth="500">
+    <Grid Margin="0,0,2,-1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="259*"/>
+            <ColumnDefinition Width="199*"/>
+            <ColumnDefinition Width="384*"/>
+        </Grid.ColumnDefinitions>
+        <TreeView TreeViewItem.Selected="OnSelectTreeViewItem" x:Name="treeView" Margin="3,60,10,10">
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Ajouter Tache" Click="addTask_click"></MenuItem>
+                    <MenuItem Header="Ajouter Sous-tache" Click="addSubTask_click"></MenuItem>
+                    <MenuItem Header="Supprimer" Click="remTask_click"></MenuItem>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+        </TreeView>
+        <DatePicker Name="beginDatePicker" Margin="17,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" Grid.Column="2" HorizontalAlignment="Left" Width="110" CalendarClosed="beginDatePicker_CalendarClosed"/>
+        <DatePicker Name="endDatePicker" Margin="5,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" RenderTransformOrigin="-0.304,0.792" Grid.Column="1" HorizontalAlignment="Left" Width="110" CalendarClosed="endDatePicker_CalendarClosed"/>
+        <RichTextBox x:Name="comment" Margin="5,60,12,35" TextInput="comment_TextInput" KeyUp="comment_KeyUp" Grid.ColumnSpan="2" Grid.Column="1">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        <TextBlock x:Name="startDateText" HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Date de début" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="1"/>
+        <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="17,10,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="2"/>
+        <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,119,10" Width="75" Click="saveTask_Click" Grid.Column="2" Height="20" VerticalAlignment="Bottom"/>
+        <Button x:Name="remTask" Content="Supprimer" Margin="0,0,39,10" Grid.Column="2" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click"/>
+        <ComboBox x:Name="comboBox" Margin="3,38,54,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True"/>
+        <Button x:Name="remContainer" Content="-" HorizontalAlignment="Left" Margin="232,38,0,0" VerticalAlignment="Top" Width="22" Height="22" RenderTransformOrigin="1.136,0.636"/>
+        <Button x:Name="addContainer" Content="+" HorizontalAlignment="Left" Margin="210,38,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="addContainer_Click"/>
+    </Grid>
+</Window>
