@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskManager
 {
-    class requete
+    public class requete
     {
         /**************************************************************/
         /*                       Requete d'accès                      */
@@ -32,6 +32,14 @@ namespace TaskManager
         {
             List<taches> list = (from t in bdd.taches1
                                  select t).ToList();
+            return list;
+        }
+
+        public taches getSTaches(mediametrieEntities bdd, string label)
+        {
+            taches list = (from t in bdd.taches1
+                           where (t.label_tache == label)
+                                 select t).First();
             return list;
         }
 

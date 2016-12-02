@@ -22,8 +22,8 @@ namespace TaskManager
         public int currentIndex;
         public NewTask newTask;
         public NewContainer newContainer;
-        private mediametrieEntities bdd;
-        private requete req;
+        public mediametrieEntities bdd;
+        public requete req;
 
         public MainWindow()
         {
@@ -79,6 +79,8 @@ namespace TaskManager
             List<taches> list_subtasks = new List<taches>();
             int index_container = 0;
             list_containers = req.getContainer(bdd);
+            list_tasks = req.getTachesContainer(bdd, "Tâches de la journée");
+
             foreach(container element in list_containers)
             {
                 int nbTache = req.getNbTacheContainer(bdd, element.label);
@@ -99,7 +101,7 @@ namespace TaskManager
 
                 }
                 ++index_container;
-                //MessageBox.Show("index_container: " + index_container);
+                MessageBox.Show("container: " + element.label);
 
             }
             //MessageBox.Show(m_containers[1].m_Tasks[0].Name);
@@ -116,7 +118,15 @@ namespace TaskManager
 
         private void saveTask_Click(object sender, RoutedEventArgs e)
         {
-            // Save BDD
+            foreach (Container c in m_containers)
+            {
+                foreach (CustomTreeViewItem i in c.m_Tasks)
+                {
+                    if (req.getSTaches(bdd, i.Name) != null)
+                        req.modifTaches(bdd, new taches());
+
+                }
+            }
         }
 
         private void newTask_OnSaveNewTask(object sender, RoutedEventArgs e)
@@ -282,9 +292,13 @@ namespace TaskManager
     {
         public string Name;
         public ObservableCollection<CustomTreeViewItem> m_Tasks { get; set; }
+        private mediametrieEntities bdd;
+        private requete req;
 
         public Container()
         {
+            bdd = new mediametrieEntities();
+            req = new requete();
             this.m_Tasks = new ObservableCollection<CustomTreeViewItem>();
         }
 
@@ -298,16 +312,17 @@ namespace TaskManager
                 ++i;
             }
 
-                if (item.parent != null && index >= 0)
-                {
-                    int parent_index = m_Tasks.IndexOf(item.parent);
-                    m_Tasks[parent_index].Items.Remove(item);
-                }
-                else if (item.parent == null)
-                {
-                    m_Tasks.Remove(item);
-                }
-
+            if (item.parent != null && index >= 0)
+            {
+                int parent_index = m_Tasks.IndexOf(item.parent);
+                m_Tasks[parent_index].Items.Remove(item);
+            }
+            else if (item.parent == null)
+            {
+                m_Tasks.Remove(item);
+            }
+            taches t = req.getSTaches(bdd, item.Name);
+            req.supTaches(bdd, t);
         }
 
         public void addItem(CustomTreeViewItem parent, string title, string beginDate, string endDate, string comment)
