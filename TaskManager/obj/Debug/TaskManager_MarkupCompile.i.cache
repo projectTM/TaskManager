@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\admin\Source\Repos\TaskManager\TaskManager\TaskManager\obj\Debug\
+C:\Users\admin\Documents\GitHub\TaskManager\TaskManager\obj\Debug\
 TaskManager
 none
 false
 DEBUG;TRACE
-C:\Users\admin\Source\Repos\TaskManager\TaskManager\TaskManager\App.xaml
+C:\Users\admin\Documents\GitHub\TaskManager\TaskManager\App.xaml
 31545053084
-
-1157819925
-14-1787462521
+21750853300
+17-703307622
+19-17355368
 MainWindow.xaml;NewTask.xaml;NewContainer.xaml;
 
 False
