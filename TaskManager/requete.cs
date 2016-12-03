@@ -39,7 +39,7 @@ namespace TaskManager
         {
             taches list = (from t in bdd.taches1
                            where (t.label_tache == label)
-                                 select t).First();
+                           select t).FirstOrDefault();
             return list;
         }
 
@@ -56,6 +56,14 @@ namespace TaskManager
             List<container> list = (from t in bdd.containers
                                     select t).ToList();
             return list;
+        }
+
+        public container getSContainer(mediametrieEntities bdd, string label)
+        {
+            container c = (from t in bdd.containers
+                           where (t.label == label)
+                           select t).FirstOrDefault();
+            return c;
         }
 
         public int getNbTacheContainer(mediametrieEntities bdd, string nomContainer)
@@ -90,13 +98,23 @@ namespace TaskManager
         public void modifTaches(mediametrieEntities bdd, taches laTaches)
         {
             /* Ajouter le changement  */
-            bdd.SaveChanges();
+            var original = bdd.taches1.Find(laTaches.label_tache);
+            if (original != null)
+            {
+                bdd.Entry(original).CurrentValues.SetValues(laTaches);
+                bdd.SaveChanges();
+            }
         }
 
         public void modifContainer(mediametrieEntities bdd, container leContainer)
         {
             /* Ajouter le changement  */
-            bdd.SaveChanges();
+            var original = bdd.containers.Find(leContainer.label);
+            if (original != null)
+            {
+                bdd.Entry(original).CurrentValues.SetValues(leContainer);
+                bdd.SaveChanges();
+            }
         }
 
         /**************************************************************/
@@ -111,6 +129,13 @@ namespace TaskManager
 
         public void supContainer(mediametrieEntities bdd, container leContainer)
         {
+            List<taches> l = (from t in bdd.taches1
+                              where t.label_container == leContainer.label
+                              select t).ToList();
+            foreach (taches e in l)
+            {
+                supTaches(bdd, e);
+            }
             bdd.containers.Remove(leContainer);
             bdd.SaveChanges();
         }

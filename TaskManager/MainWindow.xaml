@@ -5,14 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="478.328" Width="869" MinHeight="300" MinWidth="500">
+        Title="MainWindow" Height="478.328" Width="869" MinHeight="500" MinWidth="800">
     <Grid Margin="0,0,2,-1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="59*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="259*"/>
-            <ColumnDefinition Width="199*"/>
-            <ColumnDefinition Width="384*"/>
+            <ColumnDefinition Width="183*"/>
+            <ColumnDefinition Width="27*"/>
+            <ColumnDefinition Width="22*"/>
+            <ColumnDefinition Width="22*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="203*"/>
+            <ColumnDefinition Width="392*"/>
         </Grid.ColumnDefinitions>
-        <TreeView TreeViewItem.Selected="OnSelectTreeViewItem" x:Name="treeView" Margin="3,60,10,35">
+        <TreeView TreeViewItem.Selected="OnSelectTreeViewItem" x:Name="treeView" Margin="3,60,0,0" Grid.ColumnSpan="4">
             <TreeView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Ajouter Tache" Click="addTask_click"></MenuItem>
@@ -21,23 +29,23 @@
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>
-        <DatePicker Name="beginDatePicker" Margin="17,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" Grid.Column="2" HorizontalAlignment="Left" Width="110" CalendarClosed="beginDatePicker_CalendarClosed"/>
-        <DatePicker Name="endDatePicker" Margin="5,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" RenderTransformOrigin="-0.304,0.792" Grid.Column="1" HorizontalAlignment="Left" Width="110" CalendarClosed="endDatePicker_CalendarClosed"/>
-        <RichTextBox x:Name="comment" Margin="5,60,12,35" TextInput="comment_TextInput" KeyUp="comment_KeyUp" Grid.ColumnSpan="2" Grid.Column="1">
+        <DatePicker Name="beginDatePicker" Margin="17,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" Grid.Column="6" HorizontalAlignment="Left" Width="110" CalendarClosed="beginDatePicker_CalendarClosed"/>
+        <DatePicker Name="endDatePicker" Margin="5,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" RenderTransformOrigin="-0.304,0.792" Grid.Column="5" HorizontalAlignment="Left" Width="110" CalendarClosed="endDatePicker_CalendarClosed"/>
+        <RichTextBox x:Name="comment" Margin="5,60,12,0" TextInput="comment_TextInput" KeyUp="comment_KeyUp" Grid.ColumnSpan="2" Grid.Column="5">
             <FlowDocument>
                 <Paragraph>
                     <Run Text=""/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBlock x:Name="startDateText" HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Date de début" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="1"/>
-        <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="17,10,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="2"/>
-        <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,119,10" Width="75" Click="saveTask_Click" Grid.Column="2" Height="20" VerticalAlignment="Bottom"/>
-        <Button x:Name="remTask" Content="Supprimer" Margin="0,0,39,10" Grid.Column="2" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click"/>
-            <ComboBox x:Name="comboBox" Margin="3,38,54,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True"/>
-            <Button x:Name="addContainer" Content="+" HorizontalAlignment="Left" Margin="210,38,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="addContainer_Click"/>
-            <Button x:Name="remContainer" Content="-" HorizontalAlignment="Left" Margin="232,38,0,0" VerticalAlignment="Top" Width="22" Height="22" RenderTransformOrigin="1.136,0.636"/>
-        <TextBox x:Name="textBox" Margin="3,413,82,12" TextWrapping="Wrap" Text="TextBox"/>
-        <Button x:Name="button" Content="Button" Margin="182,413,10,12"/>
+        <TextBlock x:Name="startDateText" HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Date de début" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="5"/>
+        <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="17,10,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="6"/>
+        <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,119,10" Width="75" Click="saveTask_Click" Grid.Column="6" Height="20" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <Button x:Name="remTask" Content="Supprimer" Margin="0,0,39,10" Grid.Column="6" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click" Grid.Row="1"/>
+        <ComboBox x:Name="comboBox" Margin="3,38,0,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True" Height="22" Grid.ColumnSpan="2"/>
+        <Button x:Name="addContainer" Content="+" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" Click="addContainer_Click" Grid.Column="2"/>
+        <Button x:Name="remContainer" Content="-" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="1.136,0.636" Click="remContainer_Click" Grid.Column="3"/>
+        <TextBox x:Name="searchText" Margin="3,0,0,0" TextWrapping="Wrap" Text="" Grid.Row="1" Height="25" VerticalAlignment="Top"/>
+        <Button x:Name="search" Content="Rechercher" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="1" Height="25" VerticalAlignment="Top" Click="search_Click"/>
     </Grid>
 </Window>

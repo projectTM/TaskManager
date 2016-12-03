@@ -46,6 +46,7 @@ namespace TaskManager
             comboBox.Items.Add(cbBoxItem2);*/
 
             comboBox.SelectedIndex = 0;
+            remContainer.IsEnabled = false;
             currentIndex = 0;
             /*
             Container container = new Container();
@@ -70,6 +71,7 @@ namespace TaskManager
             m_containers.Add(container2);*/
 
             treeView.ItemsSource = m_containers[0].m_Tasks;
+            //comboBox.ItemsSource = m_containers;
         }
 
         private void LoadDB()
@@ -90,18 +92,27 @@ namespace TaskManager
                 foreach(taches task in list_tasks)
                 {
                     int index_task = 0;
-                    m_containers[index_container].addItem(null, task.label_tache, task.date_debut.ToString(), task.date_fin.ToString(), task.commentaire);
-                    list_subtasks = req.getSousTaches(bdd, task.label_tache);
+                    m_containers[index_container].addItem(null, task.label_tache, task.date_debut.ToString(), task.date_fin.ToString(), task.commentaire, (bool)task.effectuer);
+                    if (task.effectuer == true)
+                    {
+                        m_containers[index_container].m_Tasks[index_task].chkBox.IsChecked = true;
+                    }
+                        list_subtasks = req.getSousTaches(bdd, task.label_tache);
                     foreach(taches subtask in list_subtasks)
                     {
-                        m_containers[index_container].addItem(m_containers[index_container].m_Tasks[index_task], subtask.label_tache, subtask.date_debut.ToString(), subtask.date_fin.ToString(), subtask.commentaire);
+                        m_containers[index_container].addItem(m_containers[index_container].m_Tasks[index_task], subtask.label_tache, subtask.date_debut.ToString(), subtask.date_fin.ToString(), subtask.commentaire, (bool)subtask.effectuer);
+                        if (task.effectuer == true)
+                        {
+                            m_containers[index_container].m_Tasks[index_task].chkBox.IsChecked = true;
+                            m_containers[index_container].m_Tasks[index_task].chkBox.IsEnabled = false;
+                        }
                     }
                     ++index_task;
-                    MessageBox.Show("task: " + task.label_tache);
+                    //MessageBox.Show("task: " + task.label_tache);
 
                 }
                 ++index_container;
-                MessageBox.Show("container: " + element.label);
+                //MessageBox.Show("container: " + element.label);
 
             }
             //MessageBox.Show(m_containers[1].m_Tasks[0].Name);
@@ -120,11 +131,24 @@ namespace TaskManager
         {
             foreach (Container c in m_containers)
             {
+                if (req.getSContainer(bdd, c.Name) == null)
+                    req.ajoutContainer(bdd, new container() { label = c.Name });
                 foreach (CustomTreeViewItem i in c.m_Tasks)
                 {
-                    if (req.getSTaches(bdd, i.Name) != null)
-                        req.modifTaches(bdd, new taches());
-
+                    if (i != null)
+                    {
+                        //MessageBox.Show(c.Name);
+                        string parent_task;
+                        if (i.parent == null)
+                            parent_task = null;
+                        else
+                            parent_task = i.parent.Name;
+                        taches t = new taches() { label_container = c.Name, label_tache = i.Title.Text, label_tache_parent = parent_task, commentaire = i.comment, date_debut = DateTime.Parse(i.dateBegin), date_fin = DateTime.Parse(i.dateEnd), effectuer = i.chkBox.IsChecked };
+                        if (req.getSTaches(bdd, i.Title.Text) != null)
+                            req.modifTaches(bdd, t);
+                        else
+                            req.ajoutTaches(bdd, t);
+                    }
                 }
             }
         }
@@ -132,7 +156,7 @@ namespace TaskManager
         private void newTask_OnSaveNewTask(object sender, RoutedEventArgs e)
         {
             string content = new TextRange(newTask.comment.Document.ContentStart, newTask.comment.Document.ContentEnd).Text;
-            m_containers[currentIndex].addItem(null, "Tache", newTask.beginDatePicker.Text, newTask.endDatePicker.Text, content);
+            m_containers[currentIndex].addItem(null, "Tache", newTask.beginDatePicker.Text, newTask.endDatePicker.Text, content, false);
             newTask.Close();
         }
 
@@ -234,15 +258,21 @@ namespace TaskManager
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //MessageBox.Show("changed");
             //Load tree for container
             ComboBoxItem item = comboBox.SelectedItem as ComboBoxItem;
+            if (item == null)
+                return;
             for(int i = 0; i < m_containers.Count; ++i)
             {
-                //MessageBox.Show(item.Content.ToString());
                 if (m_containers[i].Name == item.Content.ToString())
                 {
+                    if (i < 3)
+                        remContainer.IsEnabled = false;
+                    else
+                        remContainer.IsEnabled = true;
                     treeView.ItemsSource = m_containers[i].m_Tasks;
+                    if (m_containers[i].m_Tasks.Count > 0)
+                        m_containers[i].m_Tasks[0].IsSelected = true;
                     this.currentIndex = i;
                     break;
                 }
@@ -286,6 +316,39 @@ namespace TaskManager
             newContainer.OnAddEvent += new RoutedEventHandler(newContainer_addContainer);
         }
 
+        private void remContainer_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentIndex > 2)
+                m_containers.RemoveAt(currentIndex);
+            ComboBoxItem item = comboBox.SelectedItem as ComboBoxItem;
+            currentIndex = 0;
+            comboBox.SelectedIndex = 0;
+            //MessageBox.Show(item.Content.ToString());
+            container c = req.getSContainer(bdd, item.Content.ToString());
+            req.supContainer(bdd, c);
+            comboBox.Items.Remove(item);
+        }
+
+        private void search_Click(object sender, RoutedEventArgs e)
+        {
+            CustomTreeViewItem selected = treeView.SelectedItem as CustomTreeViewItem;
+            foreach (CustomTreeViewItem item in m_containers[currentIndex].m_Tasks)
+            {
+                if (searchText.Text == item.Title.Text)
+                {
+                    selected.IsSelected = false;
+                    item.IsSelected = true;
+                }
+                foreach (CustomTreeViewItem subitem in item.Items)
+                {
+                    if (searchText.Text == subitem.Title.Text)
+                    {
+                        selected.IsSelected = false;
+                        subitem.IsSelected = true;
+                    }
+                }
+            }
+        }
     }
 
     public class Container
@@ -325,25 +388,27 @@ namespace TaskManager
             req.supTaches(bdd, t);
         }
 
-        public void addItem(CustomTreeViewItem parent, string title, string beginDate, string endDate, string comment)
+        public void addItem(CustomTreeViewItem parent, string title, string beginDate, string endDate, string comment, bool done)
         {
             CustomTreeViewItem item = new CustomTreeViewItem(title);
             item.parent = parent;
             item.comment = comment;
             item.dateBegin = beginDate;
             item.dateEnd = endDate;
+            item.chkBox.IsChecked = done;
             item.IsExpanded = true;
             if (parent != null)
             {
+                //MessageBox.Show(parent.Name);
+                item.chkBox.IsEnabled = !done;
                 int index = (m_Tasks.IndexOf(parent) >= 0) ? m_Tasks.IndexOf(parent) : 0;
                 m_Tasks[index].Items.Add(item);
             }
             else
+            {
+                item.chkBox.IsEnabled = true;
                 m_Tasks.Add(item);
-            /*if (selected != null)
-                selected.Items.Add(childItem);
-            else
-                m_Tasks[index].Items.Add(childItem);*/
+            }
         }
     }
 
