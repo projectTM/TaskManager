@@ -98,10 +98,17 @@ namespace TaskManager
         public void modifTaches(mediametrieEntities bdd, taches laTaches)
         {
             /* Ajouter le changement  */
-            var original = bdd.taches1.Find(laTaches.label_tache);
+            taches original = bdd.taches1.Find(laTaches.label_tache);
             if (original != null)
             {
                 bdd.Entry(original).CurrentValues.SetValues(laTaches);
+                /*original.label_container = laTaches.label_container;
+                original.label_tache = laTaches.label_tache;
+                original.label_tache_parent = laTaches.label_tache_parent;
+                original.date_debut = laTaches.date_debut;
+                original.date_fin = laTaches.date_fin;
+                original.commentaire = laTaches.commentaire;
+                original.effectuer = laTaches.effectuer;*/
                 bdd.SaveChanges();
             }
         }
@@ -109,7 +116,7 @@ namespace TaskManager
         public void modifContainer(mediametrieEntities bdd, container leContainer)
         {
             /* Ajouter le changement  */
-            var original = bdd.containers.Find(leContainer.label);
+            container original = bdd.containers.Find(leContainer.label);
             if (original != null)
             {
                 bdd.Entry(original).CurrentValues.SetValues(leContainer);
@@ -123,8 +130,12 @@ namespace TaskManager
 
         public void supTaches(mediametrieEntities bdd, taches laTaches)
         {
-            bdd.taches1.Remove(laTaches);
-            bdd.SaveChanges();
+            taches s = getSTaches(bdd, laTaches.label_tache);
+            if (s != null)
+            {
+                bdd.taches1.Remove(laTaches);
+                bdd.SaveChanges();
+            }
         }
 
         public void supContainer(mediametrieEntities bdd, container leContainer)

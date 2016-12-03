@@ -77,27 +77,29 @@ namespace TaskManager
         private void LoadDB()
         {
             List<container> list_containers = new List<container>();
-            List<taches> list_tasks = new List<taches>();
-            List<taches> list_subtasks = new List<taches>();
             int index_container = 0;
             list_containers = req.getContainer(bdd);
-            list_tasks = req.getTachesContainer(bdd, "Tâches de la journée");
 
             foreach(container element in list_containers)
             {
                 int nbTache = req.getNbTacheContainer(bdd, element.label);
                 comboBox.Items.Add(new ComboBoxItem() { Content = element.label });
                 m_containers.Add(new Container() { Name = element.label });
+
+                List<taches> list_tasks = new List<taches>();
+                int index_task = 0;
                 list_tasks = req.getTachesContainer(bdd, element.label);
                 foreach(taches task in list_tasks)
                 {
-                    int index_task = 0;
                     m_containers[index_container].addItem(null, task.label_tache, task.date_debut.ToString(), task.date_fin.ToString(), task.commentaire, (bool)task.effectuer);
+                    m_containers[index_container].m_Tasks[index_task].chkBox.IsEnabled = true;
                     if (task.effectuer == true)
                     {
                         m_containers[index_container].m_Tasks[index_task].chkBox.IsChecked = true;
                     }
-                        list_subtasks = req.getSousTaches(bdd, task.label_tache);
+
+                    List<taches> list_subtasks = new List<taches>();
+                    list_subtasks = req.getSousTaches(bdd, task.label_tache);
                     foreach(taches subtask in list_subtasks)
                     {
                         m_containers[index_container].addItem(m_containers[index_container].m_Tasks[index_task], subtask.label_tache, subtask.date_debut.ToString(), subtask.date_fin.ToString(), subtask.commentaire, (bool)subtask.effectuer);
@@ -108,14 +110,9 @@ namespace TaskManager
                         }
                     }
                     ++index_task;
-                    //MessageBox.Show("task: " + task.label_tache);
-
                 }
                 ++index_container;
-                //MessageBox.Show("container: " + element.label);
-
             }
-            //MessageBox.Show(m_containers[1].m_Tasks[0].Name);
         }
 
         private void unselectItem()
@@ -155,8 +152,13 @@ namespace TaskManager
 
         private void newTask_OnSaveNewTask(object sender, RoutedEventArgs e)
         {
+            string Name = "Tache";
+            int i = 0;
+            while (m_containers[currentIndex].m_Tasks.IndexOf(m_containers[currentIndex].m_Tasks.Where(p => p.Title.Text == (Name+i)).FirstOrDefault()) != -1)
+                ++i;
+            Name += i;
             string content = new TextRange(newTask.comment.Document.ContentStart, newTask.comment.Document.ContentEnd).Text;
-            m_containers[currentIndex].addItem(null, "Tache", newTask.beginDatePicker.Text, newTask.endDatePicker.Text, content, false);
+            m_containers[currentIndex].addItem(null, Name, newTask.beginDatePicker.Text, newTask.endDatePicker.Text, content, false);
             newTask.Close();
         }
 
@@ -167,15 +169,38 @@ namespace TaskManager
             newTask.OnSaveEvent += new RoutedEventHandler(newTask_OnSaveNewTask);
         }
 
+        private void newTask_OnSaveNewSubTask(object sender, RoutedEventArgs e)
+        {
+            CustomTreeViewItem selected = treeView.SelectedItem as CustomTreeViewItem;
+            if (selected != null)
+            {
+                if (selected.parent != null)
+                    selected = selected.parent;
+                string content = new TextRange(newTask.comment.Document.ContentStart, newTask.comment.Document.ContentEnd).Text;
+                string Name = "Sous-Tache";
+                int i = 0;
+                while (selected.Contains(Name+i) != -1)
+                    ++i;
+                Name += i;
+                m_containers[currentIndex].addItem(selected, Name, newTask.beginDatePicker.Text, newTask.endDatePicker.Text, content, false);
+                newTask.Close();
+            }
+        }
+
         private void addSubTask_click(object sender, RoutedEventArgs e)
         {
             CustomTreeViewItem selected = treeView.SelectedItem as CustomTreeViewItem;
             if (selected != null)
             {
+                if (selected.chkBox.IsEnabled == false && (selected.parent == null || (selected.parent != null && selected.parent.chkBox.IsEnabled == false)))
+                {
+                    MessageBox.Show("Impossible d'ajouter une Sous-Tache!");
+                    return;
+                }
+                newTask = new NewTask();
+                newTask.Show();
+                newTask.OnSaveEvent += new RoutedEventHandler(newTask_OnSaveNewSubTask);
             }
-            newTask = new NewTask();
-            newTask.Show();
-            newTask.OnSaveEvent += new RoutedEventHandler(newTask_OnSaveNewTask);
         }
 
 
@@ -423,6 +448,17 @@ namespace TaskManager
             Header = chkBox;
         }
 
+        public int Contains(string name)
+        {
+            for(int i = 0; i < this.Items.Count; ++i)
+            {
+                CustomTreeViewItem item = this.Items[i] as CustomTreeViewItem;
+                if (item.Title.Text == name)
+                    return 0;
+            }
+            return -1;
+        }
+
         private void change_label(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
@@ -435,12 +471,16 @@ namespace TaskManager
                 textBox.KeyDown += (o, ev) =>
                 {
                     if (ev.Key == Key.Enter || ev.Key == Key.Escape)
+                    {
                         Title.Text = textBox.Text;
-                    ev.Handled = true;
+                        chkBox.Content = Title;
+                        ev.Handled = true;
+                    }
                 };
                 textBox.LostFocus += (o, ev) =>
                 {
                     Title.Text = textBox.Text;
+                    chkBox.Content = Title;
                     ev.Handled = true;
                 };
             }
@@ -452,6 +492,10 @@ namespace TaskManager
         private void chkBox_Checked(object sender, RoutedEventArgs e)
         {
             this.IsSelected = true;
+            foreach(CustomTreeViewItem item in this.Items)
+            {
+                item.chkBox.IsChecked = true;
+            }
         }
 
         public CustomTreeViewItem parent;
