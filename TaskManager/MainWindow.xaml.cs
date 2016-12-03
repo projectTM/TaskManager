@@ -224,6 +224,11 @@ namespace TaskManager
                     comment.Document.Blocks.Clear();
                     comment.Document.Blocks.Add(new Paragraph(new Run(selected.comment)));
                 }
+                statusText.Text = "Taches: " + m_containers[currentIndex].m_Tasks.Count;
+                int sTaskCount = 0;
+                for (int i = 0; i < m_containers[currentIndex].m_Tasks.Count; ++i)
+                    sTaskCount += m_containers[currentIndex].m_Tasks[i].Items.Count;
+                statusText.Text += " Sous-Taches: " + sTaskCount;
             }
         }
 
@@ -296,6 +301,11 @@ namespace TaskManager
                     else
                         remContainer.IsEnabled = true;
                     treeView.ItemsSource = m_containers[i].m_Tasks;
+                    statusText.Text = "Taches: " + m_containers[i].m_Tasks.Count;
+                    int sTaskCount = 0;
+                    for (int j = 0; j < m_containers[i].m_Tasks.Count; ++j)
+                        sTaskCount += m_containers[i].m_Tasks[j].Items.Count;
+                    statusText.Text += " Sous-Taches: " + sTaskCount;
                     if (m_containers[i].m_Tasks.Count > 0)
                         m_containers[i].m_Tasks[0].IsSelected = true;
                     this.currentIndex = i;
