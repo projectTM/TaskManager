@@ -141,25 +141,18 @@ namespace TaskManager
                         else
                             parent_task = i.parent.Name;
                         taches t = new taches() { label_container = c.Name, label_tache = i.Title.Text, label_tache_parent = parent_task, commentaire = i.comment, date_debut = DateTime.Parse(i.dateBegin), date_fin = DateTime.Parse(i.dateEnd), effectuer = i.chkBox.IsChecked };
-                        if (req.getSTaches(bdd, i.Title.Text) != null)
+                        taches b_t = req.getSTaches(bdd, i.Title.Text);
+                        if (b_t != null)
                             req.modifTaches(bdd, t);
                         else
-                        {
-                            //MessageBox.Show("ajout tache: " + t.label_tache);
-
                             req.ajoutTaches(bdd, t);
-                        }
                         foreach (CustomTreeViewItem i1 in i.Items)
                         {
                             taches t1 = new taches() { label_container = null, label_tache = i1.Title.Text, label_tache_parent = i.Title.Text, commentaire = i1.comment, date_debut = DateTime.Parse(i1.dateBegin), date_fin = DateTime.Parse(i1.dateEnd), effectuer = i1.chkBox.IsChecked };
                             if (req.getSTaches(bdd, i1.Title.Text) != null)
                                 req.modifTaches(bdd, t1);
                             else
-                            {
-                                //MessageBox.Show("ajout Sous-tache: " + t1.label_tache);
-
                                 req.ajoutTaches(bdd, t1);
-                            }
                         }
                     }
                 }
@@ -467,6 +460,8 @@ namespace TaskManager
     {
         public CustomTreeViewItem(string title)
         {
+            bdd = new mediametrieEntities();
+            req = new requete();
             Title.Text = title;
             chkBox.Content = Title;
             Title.AddHandler(TextBlock.MouseDownEvent, new MouseButtonEventHandler(change_label));
@@ -498,6 +493,20 @@ namespace TaskManager
                 {
                     if (ev.Key == Key.Enter || ev.Key == Key.Escape)
                     {
+                        if (Title.Text != textBox.Text)
+                        {
+                            taches t = req.getSTaches(bdd, Title.Text);
+                            if (t != null)
+                                req.supTaches(bdd, t);
+                            taches new_t = req.getSTaches(bdd, textBox.Text);
+                            if (new_t != null)
+                            {
+                                MessageBox.Show("Déjà une tache avec ce nom");
+                                textBox.Text = Title.Text;
+                                return;
+                            }
+                        }
+                        
                         Title.Text = textBox.Text;
                         chkBox.Content = Title;
                         ev.Handled = true;
@@ -524,6 +533,8 @@ namespace TaskManager
             }
         }
 
+        private mediametrieEntities bdd;
+        private requete req;
         public CustomTreeViewItem parent;
         public CheckBox chkBox = new CheckBox();
         public TextBlock Title = new TextBlock();
