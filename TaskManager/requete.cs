@@ -130,8 +130,8 @@ namespace TaskManager
 
         public void supTaches(mediametrieEntities bdd, taches laTaches)
         {
-            taches s = getSTaches(bdd, laTaches.label_tache);
-            if (s != null)
+            //taches s = getSTaches(bdd, laTaches.label_tache);
+            if (laTaches != null)
             {
                 bdd.taches1.Remove(laTaches);
                 bdd.SaveChanges();
