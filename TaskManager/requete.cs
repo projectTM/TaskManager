@@ -101,14 +101,14 @@ namespace TaskManager
             taches original = bdd.taches1.Find(laTaches.label_tache);
             if (original != null)
             {
-                bdd.Entry(original).CurrentValues.SetValues(laTaches);
-                /*original.label_container = laTaches.label_container;
-                original.label_tache = laTaches.label_tache;
+                //bdd.Entry(original).CurrentValues.SetValues(laTaches);
+                original.label_container = laTaches.label_container;
+                //original.label_tache = laTaches.label_tache;
                 original.label_tache_parent = laTaches.label_tache_parent;
                 original.date_debut = laTaches.date_debut;
                 original.date_fin = laTaches.date_fin;
                 original.commentaire = laTaches.commentaire;
-                original.effectuer = laTaches.effectuer;*/
+                original.effectuer = laTaches.effectuer;
                 bdd.SaveChanges();
             }
         }
