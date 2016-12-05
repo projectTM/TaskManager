@@ -5,10 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
         mc:Ignorable="d"
-        Title="Ajouter une collection" Height="153.206" Width="302.85" ResizeMode="NoResize" WindowStartupLocation="Manual" Topmost="True" WindowStyle="ToolWindow">
+        Title="Ajouter une collection" Height="153.206" Width="302.85" ResizeMode="NoResize" WindowStartupLocation="Manual" Topmost="True" Icon="img/M.png" Background="{x:Null}" WindowStyle="ThreeDBorderWindow">
     <Grid>
-        <Button x:Name="addCollection" Content="Ajouter" HorizontalAlignment="Left" Margin="38,85,0,0" VerticalAlignment="Top" Width="75" Click="addCollection_Click"/>
-        <Button x:Name="Cancel" Content="Annuler" HorizontalAlignment="Left" Margin="188,85,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click"/>
+        <Grid.Background>
+            <ImageBrush ImageSource="img/minimalism-simple-simple-background-abstract-red-white-1920x1200.jpg"/>
+        </Grid.Background>
+        <Button x:Name="addCollection" Content="Ajouter" HorizontalAlignment="Left" Margin="38,85,0,0" VerticalAlignment="Top" Width="75" Click="addCollection_Click" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="Cancel" Content="Annuler" HorizontalAlignment="Left" Margin="188,85,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
         <TextBox x:Name="collectionName" HorizontalAlignment="Left" Height="23" Margin="38,32,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="225"/>
 
     </Grid>

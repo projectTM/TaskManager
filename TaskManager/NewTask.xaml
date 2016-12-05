@@ -7,12 +7,23 @@
         mc:Ignorable="d"
         Title="Nouvelle Tache" Height="300" Width="300" WindowStyle="ToolWindow">
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="img/minimalism-simple-simple-background-abstract-red-white-1920x1200.jpg"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="42*"/>
             <ColumnDefinition Width="31*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="saveNewTask" Content="Enregistrer" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="OnSaveNewTask" Grid.ColumnSpan="2"/>
-        <Button x:Name="cancelNewTask" Content="Annuler" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Grid.Column="1" Click="cancelNewTask_Click"/>
+        <Button x:Name="saveNewTask" Content="Enregistrer" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="OnSaveNewTask" Grid.ColumnSpan="2" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="cancelNewTask" Content="Annuler" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Grid.Column="1" Click="cancelNewTask_Click" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
         <RichTextBox x:Name="comment" Margin="10,64,10,35" Grid.ColumnSpan="2">
             <FlowDocument/>
         </RichTextBox>

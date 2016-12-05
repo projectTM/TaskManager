@@ -12,14 +12,30 @@ namespace TaskManager
         /*                       Requete d'accès                      */
         /**************************************************************/
 
-        //public System.Linq.IQueryable getTaches(mediametrieEntities bdd, string nomContainer)
-        //{
-        //    var list = (from t in bdd.taches
-        //                where (t.label_container == nomContainer)
-        //                select t);
-        //    return list;
-        //}
-
+        public bool checkTaches(mediametrieEntities bdd, string label)
+        {
+            bool exist;
+            int nbTask = (from t in bdd.taches1
+                          where (t.label_tache == label)
+                          select t).Count();
+            if (nbTask == 0)
+                exist = false;
+            else
+                exist = true;
+            return exist;
+        }
+        public bool checkContainer(mediametrieEntities bdd, string label)
+        {
+            bool exist;
+            int nbContainer = (from t in bdd.containers
+                               where (t.label == label)
+                               select t).Count();
+            if (nbContainer == 0)
+                exist = false;
+            else
+                exist = true;
+            return exist;
+        }
         public List<taches> getTachesContainer(mediametrieEntities bdd, string nomContainer)
         {
             List<taches> list = (from t in bdd.taches1
@@ -37,10 +53,10 @@ namespace TaskManager
 
         public taches getSTaches(mediametrieEntities bdd, string label)
         {
-            taches list = (from t in bdd.taches1
+            taches task = (from t in bdd.taches1
                            where (t.label_tache == label)
-                           select t).FirstOrDefault();
-            return list;
+                           select t).FirstOrDefault(); ;
+            return task;
         }
 
         public List<taches> getSousTaches(mediametrieEntities bdd, string nomTache)
@@ -66,6 +82,15 @@ namespace TaskManager
             return c;
         }
 
+        public List<taches> getTachesDay(mediametrieEntities bdd)
+        {
+            List<taches> list = (from t in bdd.taches1
+                                 where t.date_debut == DateTime.Today
+                                || t.date_fin == DateTime.Today
+                                || t.date_debut < DateTime.Today && t.date_fin > DateTime.Today
+                                 select t).ToList();
+            return list;
+        }
         public int getNbTacheContainer(mediametrieEntities bdd, string nomContainer)
         {
             int nbTache = (from t in bdd.taches1
@@ -74,6 +99,15 @@ namespace TaskManager
             return nbTache;
         }
 
+        public int getNbTaskDay(mediametrieEntities bdd)
+        {
+            int nbTache = (from t in bdd.taches1
+                           where t.date_debut == DateTime.Today
+                           || t.date_fin == DateTime.Today
+                           || t.date_debut < DateTime.Today && t.date_fin > DateTime.Today
+                           select t).Count();
+            return nbTache;
+        }
 
         /**************************************************************/
         /*                       Requete Ajout                        */
@@ -101,9 +135,9 @@ namespace TaskManager
             taches original = bdd.taches1.Find(laTaches.label_tache);
             if (original != null)
             {
-                //bdd.Entry(original).CurrentValues.SetValues(laTaches);
+                bdd.Entry(original).CurrentValues.SetValues(laTaches);
                 original.label_container = laTaches.label_container;
-                //original.label_tache = laTaches.label_tache;
+                original.label_tache = laTaches.label_tache;
                 original.label_tache_parent = laTaches.label_tache_parent;
                 original.date_debut = laTaches.date_debut;
                 original.date_fin = laTaches.date_fin;
@@ -124,14 +158,31 @@ namespace TaskManager
             }
         }
 
+        public void change_container_boite_rec(mediametrieEntities bdd, taches laTache)
+        {
+            if (laTache.label_tache_parent == null)
+            {
+                laTache.label_container = "Boite de réception";
+                bdd.SaveChanges();
+            }
+        }
+        public void change_container_Day(mediametrieEntities bdd, taches laTache)
+        {
+            if (laTache.label_tache_parent == null)
+            {
+                laTache.label_container = "Tâches de la journée";
+                bdd.SaveChanges();
+            }
+
+        }
         /**************************************************************/
         /*                      Requete Suppression                   */
         /**************************************************************/
 
         public void supTaches(mediametrieEntities bdd, taches laTaches)
         {
-            //taches s = getSTaches(bdd, laTaches.label_tache);
-            if (laTaches != null)
+            taches s = getSTaches(bdd, laTaches.label_tache);
+            if (s != null)
             {
                 bdd.taches1.Remove(laTaches);
                 bdd.SaveChanges();

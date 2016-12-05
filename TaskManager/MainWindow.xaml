@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="594" Width="879" MinHeight="500" MinWidth="800">
+        Title="MediaTaskManager" Height="594" Width="879" MinHeight="500" MinWidth="800" Icon="img/M.png">
+    <Window.Background>
+        <ImageBrush ImageSource="img/minimalism-simple-simple-background-abstract-red-white-1920x1200.jpg"/>
+    </Window.Background>
     <Grid Margin="0,0,2,-1">
         <Grid.RowDefinitions>
             <RowDefinition Height="130*"/>
@@ -30,24 +33,44 @@
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>
-        <DatePicker Name="beginDatePicker" Margin="17,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" Grid.Column="6" HorizontalAlignment="Left" Width="110" CalendarClosed="beginDatePicker_CalendarClosed"/>
-        <DatePicker Name="endDatePicker" Margin="5,31,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" RenderTransformOrigin="-0.304,0.792" Grid.Column="5" HorizontalAlignment="Left" Width="110" CalendarClosed="endDatePicker_CalendarClosed"/>
-        <RichTextBox x:Name="comment" Margin="5,60,12,0" TextInput="comment_TextInput" KeyUp="comment_KeyUp" Grid.ColumnSpan="2" Grid.Column="5">
+        <DatePicker Name="beginDatePicker" Margin="231,187,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" Grid.Column="6" HorizontalAlignment="Left" Width="110" CalendarClosed="beginDatePicker_CalendarClosed"/>
+        <DatePicker Name="endDatePicker" Margin="62,187,0,0" VerticalAlignment="Top" Loaded="DatePicker_Loaded" Height="24" RenderTransformOrigin="-0.304,0.792" Grid.Column="5" HorizontalAlignment="Left" Width="110" CalendarClosed="endDatePicker_CalendarClosed"/>
+        <RichTextBox x:Name="comment" Margin="0,230,17,25" TextInput="comment_TextInput" KeyUp="comment_KeyUp" Grid.ColumnSpan="2" Grid.Column="5">
             <FlowDocument>
                 <Paragraph>
                     <Run Text=""/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBlock x:Name="startDateText" HorizontalAlignment="Left" Margin="5,10,0,0" TextWrapping="Wrap" Text="Date de début" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="5"/>
-        <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="17,10,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="6"/>
-        <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,114,0" Width="75" Click="saveTask_Click" Grid.Column="6" Height="20" VerticalAlignment="Bottom" Grid.Row="1"/>
-        <Button x:Name="remTask" Content="Supprimer" Margin="0,0,34,0" Grid.Column="6" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click" Grid.Row="1"/>
+        <TextBlock x:Name="startDateText" HorizontalAlignment="Left" Margin="62,166,0,0" TextWrapping="Wrap" Text="Date de début" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="5" FontWeight="Bold" FontStyle="Italic" FontFamily="Microsoft Sans Serif"/>
+        <TextBlock x:Name="endDateText" HorizontalAlignment="Left" Margin="231,166,0,0" TextWrapping="Wrap" Text="Date de fin" VerticalAlignment="Top" Height="16" Width="110" Grid.Column="6" FontFamily="Microsoft Sans Serif" FontWeight="Bold" FontStyle="Italic"/>
+        <Button x:Name="saveTask" Content="Enregistrer" HorizontalAlignment="Right" Margin="0,0,114,0" Width="75" Click="saveTask_Click" Grid.Column="6" Height="20" VerticalAlignment="Bottom" Grid.Row="1" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="remTask" Content="Supprimer" Margin="0,0,34,0" Grid.Column="6" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom" Click="remTask_click" Grid.Row="1" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
         <ComboBox x:Name="comboBox" Margin="3,38,0,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" StaysOpenOnEdit="True" Height="22" Grid.ColumnSpan="2"/>
-        <Button x:Name="addContainer" Content="+" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" Click="addContainer_Click" Grid.Column="2"/>
-        <Button x:Name="remContainer" Content="-" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" RenderTransformOrigin="1.136,0.636" Click="remContainer_Click" Grid.Column="3"/>
+        <Button x:Name="addContainer" Content="+" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" Click="addContainer_Click" Grid.Column="2" FontWeight="Bold" FontSize="14">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
+        <Button x:Name="remContainer" Content="-" Margin="0,38,0,0" VerticalAlignment="Top" Height="22" Click="remContainer_Click" Grid.Column="3" FontWeight="Bold" FontSize="16">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
         <TextBox x:Name="searchText" Margin="3,0,0,0" TextWrapping="Wrap" Text="" Grid.Row="1" Height="24" VerticalAlignment="Top"/>
-        <Button x:Name="search" Content="Rechercher" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="1" Height="24" VerticalAlignment="Top" Click="search_Click"/>
+        <Button x:Name="search" Content="Rechercher" Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="1" Height="24" VerticalAlignment="Top" Click="search_Click" FontWeight="Bold">
+            <Button.Background>
+                <ImageBrush ImageSource="img/r.png"/>
+            </Button.Background>
+        </Button>
         <StatusBar Grid.ColumnSpan="7" Grid.Row="2" Height="19" VerticalAlignment="Bottom">
             <StatusBarItem HorizontalAlignment="Center">
                 <TextBlock Name="statusText" Text="Taches: 0, Sous-Taches: 0"/>
